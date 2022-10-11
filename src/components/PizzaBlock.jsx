@@ -12,7 +12,11 @@ function PizzaBlock(props) {
       <div className="pizza-block__selector">
         <ul>
           {props.types.map((type) => (
-            <li onClick={() => setActivType(type)} className={activeType == type ? 'active' : ''}>
+            <li
+              key={type}
+              onClick={() => setActivType(type)}
+              className={activeType === type ? 'active' : ''}
+            >
               {' '}
               {pizzaType[type]}{' '}
             </li>
@@ -21,8 +25,9 @@ function PizzaBlock(props) {
         <ul>
           {props.sizes.map((si, index) => (
             <li
+              key={index}
               onClick={() => setActiveSize(index)}
-              className={activeSize == index ? 'active' : ''}
+              className={activeSize === index ? 'active' : ''}
             >
               {si} см
             </li>
