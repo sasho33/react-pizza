@@ -6,6 +6,8 @@ function PizzaBlock(props) {
   const [activeSize, setActiveSize] = useState(0);
 
   return (
+    // https://634548cb39ca915a69fa9fb0.mockapi.io/pizzaItems
+
     <div className="pizza-block">
       <img className="pizza-block__image" src={props.imageUrl} alt="Pizza" />
       <h4 className="pizza-block__title">{props.title}</h4>

@@ -21,14 +21,17 @@ function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>популярности</span>
+        <span onClick={() => setOpen(!open)}>{menu[activeMenu]}</span>
       </div>
       {open && (
         <div className="sort__popup">
           <ul>
             {menu.map((menuItem, index) => (
               <li
-                onClick={() => setActiveMenu(index)}
+                onClick={() => {
+                  setActiveMenu(index);
+                  setOpen(false);
+                }}
                 key={index}
                 className={activeMenu === index ? 'active' : ''}
               >
