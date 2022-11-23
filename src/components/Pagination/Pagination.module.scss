@@ -1,0 +1,40 @@
+.root {
+  li {
+    display: inline-flex;
+
+    line-height: 32px;
+    margin-right: 10px;
+  }
+  a {
+    display: inline-flex;
+    justify-content: center;
+    color: #fe5f1e;
+    border: 1px solid #fe5f1e;
+    border-radius: 30px;
+    width: 35px;
+    height: 35px;
+    align-self: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #fe5f1e;
+      color: #fff;
+    }
+  }
+
+  :global {
+    .selected {
+      a {
+        background-color: #fe5f1e;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.paginationContainer {
+  display: block;
+  width: 225px;
+  margin: 0 auto;
+  padding-bottom: 15px;
+}
