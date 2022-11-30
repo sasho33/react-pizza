@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { SearchContext } from '../../App';
 
 import styles from './Search.module.scss';
 
-const Search = ({ searchValue, setSearchValue }) => {
+const Search = () => {
+  const { searchValue, setSearchValue } = useContext(SearchContext);
+  console.log(SearchContext);
   return (
     <div className={styles.root}>
       <svg className={styles.searchIcon} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
