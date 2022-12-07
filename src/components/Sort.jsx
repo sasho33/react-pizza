@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSort } from '../redux/slices/filterSlice';
 
@@ -6,7 +7,9 @@ function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector((state) => state.filter.sort);
   // const sortType = useSelector((state) => state.filter.sort.sortProperty);
+  const sortRef = useRef(false); // trigger to close pop-up window
   const [open, setOpen] = useState(false);
+
   const menu = [
     { name: 'популярности (ASC)', sortProperty: 'rating' },
     { name: 'популярности (DESC)', sortProperty: '-rating' },
@@ -16,14 +19,22 @@ function Sort() {
     { name: 'алфавиту (DESC)', sortProperty: '-title' },
   ];
 
-  // const [activeMenu, setActiveMenu] = useState(0);
-  // const onClickListItem = (obj) => {
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.path.includes(sortRef.current)) {
+        setOpen(false);
+        console.log('click outside');
+      }
+    };
 
-  //   setOpen(false);
-  // }
+    document.body.addEventListener('click', handleClickOutside);
+
+    return () => document.body.removeEventListener('click', handleClickOutside);
+    // removing EventListener for avoiding dublicated event listeners conflict
+  }, []);
 
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
