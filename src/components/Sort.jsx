@@ -20,6 +20,7 @@ function Sort() {
   ];
 
   useEffect(() => {
+    //functionality to hide filter sorting-window after click on any place
     const handleClickOutside = (event) => {
       if (!event.path.includes(sortRef.current)) {
         setOpen(false);
