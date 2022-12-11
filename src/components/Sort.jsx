@@ -3,21 +3,21 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSort } from '../redux/slices/filterSlice';
 
+export const menu = [
+  { name: 'популярности (ASC)', sortProperty: 'rating' },
+  { name: 'популярности (DESC)', sortProperty: '-rating' },
+  { name: 'цене (ASC)', sortProperty: 'price' },
+  { name: 'цене (DESC)', sortProperty: '-price' },
+  { name: 'алфавиту (ASC)', sortProperty: 'title' },
+  { name: 'алфавиту (DESC)', sortProperty: '-title' },
+];
+
 function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector((state) => state.filter.sort);
   // const sortType = useSelector((state) => state.filter.sort.sortProperty);
   const sortRef = useRef(false); // trigger to close pop-up window
   const [open, setOpen] = useState(false);
-
-  const menu = [
-    { name: 'популярности (ASC)', sortProperty: 'rating' },
-    { name: 'популярности (DESC)', sortProperty: '-rating' },
-    { name: 'цене (ASC)', sortProperty: 'price' },
-    { name: 'цене (DESC)', sortProperty: '-price' },
-    { name: 'алфавиту (ASC)', sortProperty: 'title' },
-    { name: 'алфавиту (DESC)', sortProperty: '-title' },
-  ];
 
   useEffect(() => {
     //functionality to hide filter sorting-window after click on any place

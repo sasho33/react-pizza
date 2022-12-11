@@ -8,50 +8,44 @@ import Pagination from '../components/Pagination/Pagination';
 import { SearchContext } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import axios from 'axios';
+import { fetchPizzas } from '../redux/slices/pizzaSlice';
 import { useNavigate } from 'react-router-dom';
+import { menu as sortList } from '../components/Sort';
 
 const Home = () => {
   const navigate = useNavigate(); //function navigate from useNavigate hooks
   const dispatch = useDispatch(); // dispatch funvtion from redux declaration (default)
   const isSearch = useRef(false); // checkind fetch query necesserity
   const isMounted = useRef(false); // checking url forming necesserity due first render
-  const fetchingPizzas = () => {
+
+  const { categoryId, sort, currentPage } = useSelector((state) => state.filter); //get state from filterSlice
+  const { items, status } = useSelector((state) => state.pizza);
+  const sortType = sort.sortProperty;
+  const { searchValue } = useContext(SearchContext); //значение из SearchContext для поиска
+  // const [items, setItems] = useState([]); //pizzas array
+  // const [isLoading, setIsLoading] = useState(true); //проверка загружена страницы или нет
+  // const sortList = [
+  //   { name: 'популярности (ASC)', sortProperty: 'rating' },
+  //   { name: 'популярности (DESC)', sortProperty: '-rating' },
+  //   { name: 'цене (ASC)', sortProperty: 'price' },
+  //   { name: 'цене (DESC)', sortProperty: '-price' },
+  //   { name: 'алфавиту (ASC)', sortProperty: 'title' },
+  //   { name: 'алфавиту (DESC)', sortProperty: '-title' },
+  // ];
+
+  const fetchingPizzas = async () => {
     //function to fetch JSON data from back-end
-    setIsLoading(true); // showing skeletons
+    // setIsLoading(true); // showing skeletons
 
     const order = sortType.includes('-') ? 'desc' : 'ask';
     const sortBy = sortType.replace('-', '');
+    const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue;
 
-    axios // fetching data with pizza array from mokapi server
-      .get(
-        `https://634548cb39ca915a69fa9fb0.mockapi.io/pizzaItems?page=${currentPage}&limit=4&${
-          categoryId > 0 ? `category=${categoryId}` : ''
-        }&sortBy=${sortBy}&order=${order}&search=${search}`,
-      )
-      .then((res) => {
-        setItems(res.data);
-        setIsLoading(false);
-      });
+    dispatch(fetchPizzas({ currentPage, order, sortBy, search, categoryId }));
 
     window.scrollTo(0, 0);
   };
-
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter); //get state from filterSlice
-  const sortType = sort.sortProperty;
-  const { searchValue } = useContext(SearchContext); //значение из SearchContext для поиска
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); //проверка загружена страницы или нет
-  // const [currentPage, setCurrentPage] = useState(1);
-  const sortList = [
-    { name: 'популярности (ASC)', sortProperty: 'rating' },
-    { name: 'популярности (DESC)', sortProperty: '-rating' },
-    { name: 'цене (ASC)', sortProperty: 'price' },
-    { name: 'цене (DESC)', sortProperty: '-price' },
-    { name: 'алфавиту (ASC)', sortProperty: 'title' },
-    { name: 'алфавиту (DESC)', sortProperty: '-title' },
-  ];
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
@@ -79,12 +73,12 @@ const Home = () => {
   }, []);
 
   React.useEffect(() => {
-    if (!isSearch.current) {
-      //checking if do we need to commit fetch query without changing any filters
-      fetchingPizzas();
-    }
+    // if (!isSearch.current) {
+    //checking if do we need to commit fetch query without changing any filters
+    fetchingPizzas();
+    // }
 
-    isSearch.current = false;
+    // isSearch.current = false;
   }, [categoryId, sortType, searchValue, currentPage]); // data, which affect on use Effect statment
 
   React.useEffect(() => {
@@ -104,6 +98,7 @@ const Home = () => {
 
   const pizzas = items.map(
     (obj) => <PizzaBlock key={obj.id} {...obj} />,
+
     // title={obj.title}
     // price={obj.price}
     // sizes={obj.sizes}
@@ -119,7 +114,14 @@ const Home = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">{isLoading ? skeletons : pizzas}</div>
+      {status === 'rejected' ? (
+        <div class="content__error-info">
+          <h2>Произошла ошибка :(</h2>
+          <p>К сожалению не удалось получить пиццы. Попробуйте повторить попытку позжею</p>
+        </div>
+      ) : (
+        <div className="content__items">{status === 'loading' ? skeletons : pizzas}</div>
+      )}
       <Pagination value={currentPage} onChangePage={onChangePage} />
     </div>
   );
