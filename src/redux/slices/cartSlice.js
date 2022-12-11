@@ -52,6 +52,8 @@ const cartSlice = createSlice({
 
 export const selectCart = (state) => state.cart; // selector for cart to DRY 2 string in Cart and Header
 
+export const selectcartItemById = (id) => (state) => state.cart.items.find((obj) => obj.id === id);
+
 export const { addItem, removeItem, clearItems, minusItem } = cartSlice.actions;
 
 export default cartSlice.reducer;

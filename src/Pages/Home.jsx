@@ -7,8 +7,13 @@ import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination/Pagination';
 import { SearchContext } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzas } from '../redux/slices/pizzaSlice';
+import {
+  selectFilter,
+  setCategoryId,
+  setCurrentPage,
+  setFilters,
+} from '../redux/slices/filterSlice';
+import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
 import { useNavigate } from 'react-router-dom';
 import { menu as sortList } from '../components/Sort';
 
@@ -18,10 +23,9 @@ const Home = () => {
   const isSearch = useRef(false); // checkind fetch query necesserity
   const isMounted = useRef(false); // checking url forming necesserity due first render
 
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter); //get state from filterSlice
-  const { items, status } = useSelector((state) => state.pizza);
+  const { categoryId, sort, currentPage, searchValue } = useSelector(selectFilter); //get state from filterSlice
+  const { items, status } = useSelector(selectPizzaData);
   const sortType = sort.sortProperty;
-  const { searchValue } = useContext(SearchContext); //значение из SearchContext для поиска
   // const [items, setItems] = useState([]); //pizzas array
   // const [isLoading, setIsLoading] = useState(true); //проверка загружена страницы или нет
   // const sortList = [
