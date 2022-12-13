@@ -1,24 +1,42 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, selectcartItemById } from '../../redux/slices/cartSlice';
+import { Link } from 'react-router-dom';
+import { addItem, selectcartItemById, selectCart } from '../../redux/slices/cartSlice';
 const pizzaType = ['тонкое', 'традиционное'];
 
-function PizzaBlock(props) {
+type PizzaBlockProps = {
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  sizes: number[];
+  types: number[];
+  count: number;
+};
+
+const PizzaBlock: React.FC<PizzaBlockProps> = ({
+  id,
+  title,
+  price,
+  imageUrl,
+  sizes,
+  types,
+  count,
+}) => {
   const dispatch = useDispatch();
-  const cartItem = useSelector(selectcartItemById); //count of same pizzas
+  const cartItem = useSelector(selectcartItemById(id)); //count of same pizzas
   const [activeType, setActivType] = useState(0); //state for type in product
   const [activeSize, setActiveSize] = useState(0); //state for size in product
-
   const addedCount = cartItem ? cartItem.count : 0; // checking for count item exist?
 
   const onClickAdd = () => {
     const item = {
-      id: props.id,
-      title: props.title,
-      price: props.price,
-      imageUrl: props.imageUrl,
+      id: id,
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
       type: pizzaType[activeType],
-      size: props.sizes[activeSize],
+      size: sizes[activeSize],
     };
     dispatch(addItem(item));
   };
@@ -27,11 +45,16 @@ function PizzaBlock(props) {
     // https://634548cb39ca915a69fa9fb0.mockapi.io/pizzaItems
     <div className="pizza-block-wraper">
       <div className="pizza-block">
-        <img className="pizza-block__image" src={props.imageUrl} alt="Pizza" />
-        <h4 className="pizza-block__title">{props.title}</h4>
+        <Link to={`/pizza/${id}`}>
+          {' '}
+          <img className="pizza-block__image" src={imageUrl} alt="Pizza" />{' '}
+        </Link>
+        <h4 className="pizza-block__title">
+          <Link to={`/pizza/${id}`}>{title}</Link>
+        </h4>
         <div className="pizza-block__selector">
           <ul>
-            {props.types.map((type) => (
+            {types.map((type) => (
               <li
                 key={type}
                 onClick={() => setActivType(type)}
@@ -43,7 +66,7 @@ function PizzaBlock(props) {
             ))}
           </ul>
           <ul>
-            {props.sizes.map((si, index) => (
+            {sizes.map((si, index) => (
               <li
                 key={index}
                 onClick={() => setActiveSize(index)}
@@ -55,7 +78,7 @@ function PizzaBlock(props) {
           </ul>
         </div>
         <div className="pizza-block__bottom">
-          <div className="pizza-block__price">от {props.price} ₴</div>
+          <div className="pizza-block__price">от {price} ₴</div>
           <button onClick={onClickAdd} className="button button--outline button--add">
             <svg
               width="12"
@@ -76,6 +99,6 @@ function PizzaBlock(props) {
       </div>
     </div>
   );
-}
+};
 
 export default PizzaBlock;

@@ -25,6 +25,7 @@ body {
   padding: 40px 0;
   @media (max-width: 820px) {
     padding: 0;
+    padding-bottom: 20px;
   }
 
   &__error-info {

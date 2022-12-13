@@ -5,7 +5,7 @@ import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock/index';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination/Pagination';
-import { SearchContext } from '../App';
+// import { SearchContext } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectFilter,
@@ -13,11 +13,12 @@ import {
   setCurrentPage,
   setFilters,
 } from '../redux/slices/filterSlice';
+
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
 import { useNavigate } from 'react-router-dom';
 import { menu as sortList } from '../components/Sort';
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate(); //function navigate from useNavigate hooks
   const dispatch = useDispatch(); // dispatch funvtion from redux declaration (default)
   const isSearch = useRef(false); // checkind fetch query necesserity
@@ -46,16 +47,19 @@ const Home = () => {
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue;
 
-    dispatch(fetchPizzas({ currentPage, order, sortBy, search, categoryId }));
+    dispatch(
+      //@ts-ignore
+      fetchPizzas({ currentPage, order, sortBy, search, categoryId }),
+    );
 
     window.scrollTo(0, 0);
   };
 
-  const onChangeCategory = (id) => {
+  const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id));
   };
 
-  const onChangePage = (number) => {
+  const onChangePage = (number: number) => {
     dispatch(setCurrentPage(number));
   };
 
@@ -101,7 +105,7 @@ const Home = () => {
   }, [categoryId, sort, categoryId]); // useSelector data retrieving
 
   const pizzas = items.map(
-    (obj) => <PizzaBlock key={obj.id} {...obj} />,
+    (obj: any) => <PizzaBlock key={obj.id} {...obj} />,
 
     // title={obj.title}
     // price={obj.price}
@@ -114,12 +118,12 @@ const Home = () => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories value={categoryId} onClickCategory={(id) => onChangeCategory(id)} />
+        <Categories value={categoryId} onClickCategory={(id: any) => onChangeCategory(id)} />
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === 'rejected' ? (
-        <div class="content__error-info">
+        <div className="content__error-info">
           <h2>Произошла ошибка :(</h2>
           <p>К сожалению не удалось получить пиццы. Попробуйте повторить попытку позжею</p>
         </div>

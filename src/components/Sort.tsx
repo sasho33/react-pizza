@@ -3,7 +3,12 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectSort, setSort } from '../redux/slices/filterSlice';
 
-export const menu = [
+type SortItem = {
+  name: string;
+  sortProperty: string;
+};
+
+export const menu: SortItem[] = [
   { name: 'популярности (ASC)', sortProperty: 'rating' },
   { name: 'популярности (DESC)', sortProperty: '-rating' },
   { name: 'цене (ASC)', sortProperty: 'price' },
@@ -16,15 +21,21 @@ function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector(selectSort);
   // const sortType = useSelector((state) => state.filter.sort.sortProperty);
-  const sortRef = useRef(false); // trigger to close pop-up window
+  const sortRef = useRef<HTMLDivElement>(null); // trigger to close pop-up window
   const [open, setOpen] = useState(false);
+
+  const onClickListItem = (obj: SortItem) => {
+    dispatch(setSort(obj));
+    // onChangeSort(obj);
+    setOpen(false);
+  };
 
   useEffect(() => {
     //functionality to hide filter sorting-window after click on any place
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (!event.path.includes(sortRef.current)) {
         setOpen(false);
-        console.log('click outside');
+        // console.log('click outside');
       }
     };
 
@@ -58,11 +69,7 @@ function Sort() {
             {menu.map((obj, index) => (
               <li
                 key={index}
-                onClick={() => {
-                  dispatch(setSort(obj));
-                  // onChangeSort(obj);
-                  setOpen(false);
-                }}
+                onClick={() => onClickListItem(obj)}
                 className={sort.sortProperty === obj.sortProperty ? 'active' : ''}
               >
                 {obj.name}
