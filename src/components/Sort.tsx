@@ -8,6 +8,10 @@ type SortItem = {
   sortProperty: string;
 };
 
+type PopupClick = MouseEvent & {
+  path: Node[]; // typeScrip declaration for path event
+};
+
 export const menu: SortItem[] = [
   { name: 'популярности (ASC)', sortProperty: 'rating' },
   { name: 'популярности (DESC)', sortProperty: '-rating' },
@@ -32,8 +36,10 @@ function Sort() {
 
   useEffect(() => {
     //functionality to hide filter sorting-window after click on any place
-    const handleClickOutside = (event: any) => {
-      if (!event.path.includes(sortRef.current)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      const _event = event as PopupClick;
+
+      if (sortRef.current && !_event.path.includes(sortRef.current)) {
         setOpen(false);
         // console.log('click outside');
       }
