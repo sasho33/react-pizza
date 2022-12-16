@@ -17,10 +17,11 @@ import {
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
 import { useNavigate } from 'react-router-dom';
 import { menu as sortList } from '../components/Sort';
+import { useAppDispatch } from '../redux/store';
 
 const Home: React.FC = () => {
   const navigate = useNavigate(); //function navigate from useNavigate hooks
-  const dispatch = useDispatch(); // dispatch funvtion from redux declaration (default)
+  const dispatch = useAppDispatch(); // dispatch funvtion from redux declaration (default)
   const isSearch = useRef(false); // checkind fetch query necesserity
   const isMounted = useRef(false); // checking url forming necesserity due first render
 
@@ -44,7 +45,7 @@ const Home: React.FC = () => {
 
     const order = sortType.includes('-') ? 'desc' : 'ask';
     const sortBy = sortType.replace('-', '');
-    const category = categoryId > 0 ? `category=${categoryId}` : '';
+    // const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue;
 
     dispatch(
@@ -68,11 +69,17 @@ const Home: React.FC = () => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1)); //deleting "?" from the start of url
 
-      const sort = sortList.find((obj) => obj.sortProperty === params.sortProperty);
+      const sort = sortList.find((obj) => obj.sortProperty === params.sortBy);
+
+      if (sort) {
+        params.sortBy = sort;
+      }
 
       dispatch(
         setFilters({
-          ...params,
+          searchValue: String(params.search),
+          categoryId: Number(params.category),
+          currentPage: Number(params.currentPage),
           sort,
         }),
       );

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { addItem, selectcartItemById, selectCart } from '../../redux/slices/cartSlice';
+import { addItem, selectcartItemById, selectCart, CartItem } from '../../redux/slices/cartSlice';
 const pizzaType = ['тонкое', 'традиционное'];
 
 type PizzaBlockProps = {
@@ -14,15 +14,7 @@ type PizzaBlockProps = {
   count: number;
 };
 
-const PizzaBlock: React.FC<PizzaBlockProps> = ({
-  id,
-  title,
-  price,
-  imageUrl,
-  sizes,
-  types,
-  count,
-}) => {
+const PizzaBlock: React.FC<PizzaBlockProps> = ({ id, title, price, imageUrl, sizes, types }) => {
   const dispatch = useDispatch();
   const cartItem = useSelector(selectcartItemById(id)); //count of same pizzas
   const [activeType, setActivType] = useState(0); //state for type in product
@@ -30,13 +22,14 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
   const addedCount = cartItem ? cartItem.count : 0; // checking for count item exist?
 
   const onClickAdd = () => {
-    const item = {
+    const item: CartItem = {
       id: id,
       title: title,
       price: price,
       imageUrl: imageUrl,
       type: pizzaType[activeType],
       size: sizes[activeSize],
+      count: 0,
     };
     dispatch(addItem(item));
   };
