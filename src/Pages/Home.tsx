@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState, useRef, useCallback } from 'react';
 import qs from 'qs'; //import qs for reference showing url
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -6,7 +6,7 @@ import PizzaBlock from '../components/PizzaBlock/index';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination/Pagination';
 // import { SearchContext } from '../App';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   selectFilter,
   setCategoryId,
@@ -56,9 +56,9 @@ const Home: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  const onChangeCategory = (id: number) => {
+  const onChangeCategory = useCallback((id: number) => {
     dispatch(setCategoryId(id));
-  };
+  }, []);
 
   const onChangePage = (number: number) => {
     dispatch(setCurrentPage(number));
@@ -126,13 +126,13 @@ const Home: React.FC = () => {
     <div className="container">
       <div className="content__top">
         <Categories value={categoryId} onClickCategory={(id: any) => onChangeCategory(id)} />
-        <Sort />
+        <Sort value={sort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === 'rejected' ? (
         <div className="content__error-info">
           <h2>Произошла ошибка :(</h2>
-          <p>К сожалению не удалось получить пиццы. Попробуйте повторить попытку позжею</p>
+          <p>К сожалению не удалось получить пиццы. Попробуйте повторить попытку позже</p>
         </div>
       ) : (
         <div className="content__items">{status === 'loading' ? skeletons : pizzas}</div>

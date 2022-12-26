@@ -2,12 +2,12 @@ import { RootState } from './../store';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export enum SortPropertyEnum {
-  RATING_DESC = 'rating',
-  RATING_ASK = '-rating',
-  TITLE_DESC = 'title',
-  TITLE_ASK = '-title',
-  PRICE_DESC = 'price',
-  PRICE_ASK = '-price',
+  RATING_ASK = 'rating',
+  RATING_DESC = '-rating',
+  TITLE_ASK = 'title',
+  TITLE_DESC = '-title',
+  PRICE_ASK = 'price',
+  PRICE_DESC = '-price',
 }
 
 export type Sort = {
@@ -29,7 +29,7 @@ const initialState = {
   currentPage: 1,
   sort: {
     name: 'популярности (ASC)',
-    sortProperty: SortPropertyEnum.RATING_DESC,
+    sortProperty: SortPropertyEnum.RATING_ASK,
   },
 };
 
