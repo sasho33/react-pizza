@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import qs from 'qs'; //import qs for reference showing url
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -7,17 +7,13 @@ import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination/Pagination';
 // import { SearchContext } from '../App';
 import { useSelector } from 'react-redux';
-import {
-  selectFilter,
-  setCategoryId,
-  setCurrentPage,
-  setFilters,
-} from '../redux/slices/filterSlice';
-
-import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
+import { setCategoryId, setCurrentPage, setFilters } from '../redux/filter/slice';
+import { selectFilter } from '../redux/filter/selectors';
+import { fetchPizzas } from '../redux/pizza/slice';
 import { useNavigate } from 'react-router-dom';
 import { menu as sortList } from '../components/Sort';
 import { useAppDispatch } from '../redux/store';
+import { selectPizzaData } from '../redux/pizza/selectors';
 
 const Home: React.FC = () => {
   const navigate = useNavigate(); //function navigate from useNavigate hooks
@@ -88,12 +84,12 @@ const Home: React.FC = () => {
   }, []);
 
   React.useEffect(() => {
-    // if (!isSearch.current) {
-    //checking if do we need to commit fetch query without changing any filters
-    fetchingPizzas();
-    // }
+    if (!isSearch.current) {
+      //checking if do we need to commit fetch query without changing any filters
+      fetchingPizzas();
+    }
 
-    // isSearch.current = false;
+    isSearch.current = false;
   }, [categoryId, sortType, searchValue, currentPage]); // data, which affect on use Effect statment
 
   React.useEffect(() => {
